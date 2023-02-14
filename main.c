@@ -15,6 +15,14 @@
 int main(int argc, char **argv)
 {
 	char cmdline[MAXBUF]; // stores user input from commmand line
+	//print the shell bit
+	printf(DSH_PROMPT);
+	fgets(cmdline, MAXBUF, stdin);
+	//trim input
+	while (cmdline[0] != '/0'){
+
+	}
+	//if input is empty reprompt
 
 	return 0;
 }
