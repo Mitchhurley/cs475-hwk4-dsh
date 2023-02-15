@@ -43,7 +43,6 @@ int main(int argc, char **argv)
 			if (args[0][0] == '/'){
 				mode1exe(args);
 			}
-			free(cmdline);
 		}else if (currComm == CMD_CD){
 			
 		}else if (currComm == CMD_PWD){
@@ -51,8 +50,6 @@ int main(int argc, char **argv)
 		}else if (currComm == CMD_ECHO){
 			
 		}else if (currComm == CMD_EXIT){
-
-		
 			int i = 0;
 			while(args[i] != NULL){
 				free(args[i]);

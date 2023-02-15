@@ -60,10 +60,10 @@ char *trimWhitespace(char *str){
         return NULL;
 
     memcpy(result, str, len);
-    result[len] = 0;
+    result[len] = '\0';
 
     // Free dynamically allocated memory before returning
-
+    free(str);
 
     return result;
 }
