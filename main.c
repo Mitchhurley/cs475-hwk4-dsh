@@ -10,69 +10,60 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <string.h>
+#include "builtins.h"
 #include "dsh.h"
 
 int main(int argc, char **argv)
 {
-	char cmdline[MAXBUF]; // stores user input from commmand line
-	char path[MAXBUF];
-	cmd_t currComm;
+	 // stores user input from commmand line
+	
+	
+
 	
 	
 	//print the shell bit
 	do {
+		char *cmdline = (char*) malloc(MAXBUF);
 		printf(DSH_PROMPT);
 		fgets(cmdline, MAXBUF, stdin);
+		
 		//trim input
-		strcpy(cmdline, trimWhitespace());
+		strcpy(cmdline, trimWhitespace(cmdline));
 		//if the first character is forward slash, use mode1
-		char *ptr = strtok(cmdline, " ");
-		char *args[MAX_ARGS + 1];
-		//gets the first arg
-		*args[0] = strdup(ptr);
-		i = 1;
-		//read in the command line input and put it in 
-		while (ptr != NULL && i < MAX_ARGS){
-			args[i++] = strtok(NULL, DELIM);
-		}
-		//get the 
-		currComm = chkBuiltin(*args[0]);
+		
+		//declare array of arguments
+		char **args = split(cmdline, " ");
+		
+		printf("\nGot input: %s", args[0]);
+		//get the current command	
+		cmd_t currComm = chkBuiltin(args[0]);
 		//case of an external command
 		if (currComm == CMD_EXT){
-			//declare array of arguments
-			
-			//marks end of list
-			args[i] = NULL;
-			int pid = fork();
-			//if its the child process
-			if (pid == 0){
-				execv(args[0], args);
+			//if the first char of the path starts with '/', its a full path
+			if (args[0][0] == '/'){
+				mode1exe(args);
 			}
-			else if (pid > 0) {
-			// parent process
-				wait(&status);
-			} else {
-				// fork failed
-				perror("fork");
-				exit(1);
-			}
-
+			free(cmdline);
 		}else if (currComm == CMD_CD){
-			
-		}else if (currComm == CMD_EXIT){
 			
 		}else if (currComm == CMD_PWD){
 			
-		}else if (currComm == CMD_HISTORY){
-			
 		}else if (currComm == CMD_ECHO){
 			
-		}
-		free(args[0]);
+		}else if (currComm == CMD_EXIT){
 
 		
-	} while (cmdline[0] != '/0')
-		
+			int i = 0;
+			while(args[i] != NULL){
+				free(args[i]);
+				i++;
+			}
+			free(args);
+			free(cmdline);
+			exit(1);
+		}
+		free(cmdline);
+	} while (1);
 	
 	//if input is empty reprompt
 

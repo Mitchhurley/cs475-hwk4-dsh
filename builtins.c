@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdio.h>
 #include "builtins.h"
 
 /**
@@ -7,14 +8,13 @@
  * @return positive code if true, CMD_EXT otherwise
  */
 cmd_t chkBuiltin(char *cmd) {
+	printf("\nCheckingBuiltIns");
 	if (!strcmp(cmd, "cd"))
 		return CMD_CD;
 	else if (!strcmp(cmd, "exit"))
 		return CMD_EXIT;
 	else if (!strcmp(cmd, "pwd"))
 		return CMD_PWD;
-	else if (!strcmp(cmd, "history"))
-		return CMD_HIST;
 	else if (!strcmp(cmd, "echo"))
 		return CMD_ECHO;
 	return CMD_EXT;
