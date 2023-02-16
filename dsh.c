@@ -22,7 +22,7 @@
 void mode1exe(char *args[]){
     int status = 0;
     if (access(args[0], F_OK | X_OK) == 0) {
-       int pid = fork();
+        int pid = fork();
 			//if its the child process
 		if (pid == 0){
 			execv(args[0], args);
@@ -39,6 +39,7 @@ void mode1exe(char *args[]){
     else {
         // No good! File doesn't exist or is not executable!
         // Alert user and re-prompt
+        
     }
 }
 
@@ -63,12 +64,12 @@ char *trimWhitespace(char *str){
     result[len] = '\0';
 
     // Free dynamically allocated memory before returning
-    free(str);
+    
 
     return result;
 }
 
-char** split(char *str, char *delim){
+char** split(char *str, char *delim, int *argc){
     int count = 0;
     //tallies instances of delim
     char* p = str;
@@ -81,19 +82,19 @@ char** split(char *str, char *delim){
         }
     }
     //handles case of no instances
-    
+    *argc = count;
 
     count++;  // Add one for the last token
     printf("\nCount is %d", count);
     printf("\nBytes are %ld", sizeof(char*) * (count + 1));
     char** args = (char**) malloc(sizeof(char*) * (count + 1));
-    for (int i = 0; i <= count; i++) {
+    for (int i = 0; i < count; i++) {
         printf("\nMalloc'ing to args[%d]", i);
         args[i] = (char*) malloc(MAX_TOK_LEN * sizeof(char));
     }
 
     int i = 0;
-    char str_copy[MAXBUF];
+    char str_copy[MAXBUF] ;
     strcpy(str_copy, str);
     char* token = strtok(str_copy, delim);
 
@@ -104,6 +105,7 @@ char** split(char *str, char *delim){
     }
     //sets the last arg to be null
     args[i] = NULL;
+
 
     return args;
 

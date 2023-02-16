@@ -12,5 +12,5 @@
 
 // TODO: Your function prototypes below
 void mode1exe(char *args[]);
-char *trimWhitespace(char *string);
-char** split(char *str, char *delim);
+char* trimWhitespace(char *string);
+char** split(char *str, char *delim, int *argc);

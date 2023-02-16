@@ -24,42 +24,58 @@ int main(int argc, char **argv)
 	//print the shell bit
 	do {
 		char *cmdline = (char*) malloc(MAXBUF);
+		int *numArgs = (int*)malloc(sizeof(int));
 		printf(DSH_PROMPT);
 		fgets(cmdline, MAXBUF, stdin);
-		
-		//trim input
-		strcpy(cmdline, trimWhitespace(cmdline));
-		//if the first character is forward slash, use mode1
-		
-		//declare array of arguments
-		char **args = split(cmdline, " ");
-		
-		printf("\nGot input: %s", args[0]);
-		//get the current command	
-		cmd_t currComm = chkBuiltin(args[0]);
-		//case of an external command
-		if (currComm == CMD_EXT){
-			//if the first char of the path starts with '/', its a full path
-			if (args[0][0] == '/'){
-				mode1exe(args);
+		if (cmdline[0] != '\n'){
+			cmdline[strlen(cmdline) - 1] = '\0';
+			char *tmp = trimWhitespace(cmdline);
+			//trim input
+			strcpy(cmdline, tmp);
+			free(tmp);
+			//if the first character is forward slash, use mode1
+			
+			//declare array of arguments
+			char **args = split(cmdline, " ", numArgs);
+
+			printf("\nnumArgs = %d", *numArgs);
+			
+			
+			printf("\nGot input: %s", args[0]);
+			//get the current command	
+			cmd_t currComm = chkBuiltin(args[0]);
+			//case of an external command
+			if (currComm == CMD_EXT){
+				//if the first char of the path starts with '/', its a full path
+				//if (args[0][0] == '/'){
+					mode1exe(args);
+					printf("\nCan anyone hear me?");
+					for (int i = 0; i <= *numArgs; ++i) 
+						free(args[i]);
+					free(args);
+					free(numArgs);
+					free(cmdline);
+					
+				//}
+			}else if (currComm == CMD_CD){
+				
+			}else if (currComm == CMD_PWD){
+				
+			}else if (currComm == CMD_ECHO){
+				
+			}else if (currComm == CMD_EXIT){
+				for (int i = 0; i <= *numArgs; ++i) 
+					free(args[i]);
+				free(args);
+				free(numArgs);
+				free(cmdline);
+				exit(1);
 			}
-		}else if (currComm == CMD_CD){
-			
-		}else if (currComm == CMD_PWD){
-			
-		}else if (currComm == CMD_ECHO){
-			
-		}else if (currComm == CMD_EXIT){
-			int i = 0;
-			while(args[i] != NULL){
-				free(args[i]);
-				i++;
-			}
-			free(args);
+		} else {
 			free(cmdline);
-			exit(1);
+			free(numArgs);
 		}
-		free(cmdline);
+		
 	} while (1);
 	
 	//if input is empty reprompt
