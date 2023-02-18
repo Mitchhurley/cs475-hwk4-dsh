@@ -6,6 +6,7 @@
  */
 
 #define MAXBUF 256
+#define MAX_PATH_LEN 1028
 #define HISTORY_LEN 100
 #define DSH_PROMPT "dsh> "
 #define MAX_TOK_LEN 256
