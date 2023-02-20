@@ -74,15 +74,15 @@ int main(int argc, char **argv)
 						;
 					}
 				}else {
-					char* home =getenv("Home");
+					char* home =getenv("HOME");
 
 					if (chdir(home) == 0){
 					}else perror("Error");
 					for (int i = 0; i <= *numArgs; ++i) 
 							free(args[i]);
-						free(args);
-						free(numArgs);
-						free(cmdline);
+					free(args);
+					free(numArgs);
+					free(cmdline);
 				}
 			}else if (currComm == CMD_PWD){
 				char cwd[MAX_PATH_LEN];
