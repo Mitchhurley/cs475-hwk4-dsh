@@ -39,8 +39,11 @@ int main(int argc, char **argv)
 			//case of an external command
 			if (currComm == CMD_EXT){
 				//if the first char of the path starts with '/', its a full path
+				if (strcmp(args[(*numArgs)], "&") == 0){
+					//move to where its actually executed;
+				}
 				if (args[0][0] == '/'){
-					mode1exe(args);
+					mode1exe(args, numArgs);
 					printf("\nCan anyone hear me?");
 					for (int i = 0; i <= *numArgs; ++i) 
 						free(args[i]);
@@ -49,7 +52,7 @@ int main(int argc, char **argv)
 					free(cmdline);
 					
 				}else {
-					mode1exe(args);
+					
 					printf("\nCan anyone hear me?");
 					for (int i = 0; i <= *numArgs; ++i) 
 						free(args[i]);
@@ -58,7 +61,7 @@ int main(int argc, char **argv)
 					free(cmdline);
 				}
 			}else if (currComm == CMD_CD){
-				printf("Command is CD, %s", args[1]);
+				
 				if (chdir(args[1]) == 0){
 					for (int i = 0; i <= *numArgs; ++i) 
 						free(args[i]);

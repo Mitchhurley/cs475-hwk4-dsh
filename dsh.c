@@ -19,22 +19,26 @@
 
 
 // TODO: Your function definitions (declarations in dsh.h)
-void mode1exe(char *args[]){
+void mode1exe(char *args[], int *numArgs){
     int status = 0;
     if (access(args[0], F_OK | X_OK) == 0) {
-        int pid = fork();
-			//if its the child process
-		if (pid == 0){
-			execv(args[0], args);
-		}
-		else if (pid > 0) {
-		// parent process
-			wait(&status);
-		} else {
-			// fork failed
-			perror("fork");
-			exit(1);
-		}
+        if (strcmp(args[(*numArgs)], "&") == 0){
+					//move to where its actually executed;
+		}else {
+            int pid = fork();
+                //if its the child process
+            if (pid == 0){
+                execv(args[0], args);
+            }
+            else if (pid > 0) {
+            // parent process
+                wait(&status);
+            } else {
+                // fork failed
+                perror("fork");
+                exit(1);
+            }
+        }
     }
     else {
         // No good! File doesn't exist or is not executable!
