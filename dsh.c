@@ -23,7 +23,11 @@ void mode1exe(char *args[], int *numArgs){
     int status = 0;
     if (access(args[0], F_OK | X_OK) == 0) {
         if (strcmp(args[(*numArgs)], "&") == 0){
-					//move to where its actually executed;
+					int pid = fork();
+                    //if its the child process
+                    if (pid == 0){
+                        execv(args[0], args);
+                    }
 		}else {
             int pid = fork();
                 //if its the child process
@@ -89,11 +93,8 @@ char** split(char *str, char *delim, int *argc){
     *argc = count;
 
     count++;  // Add one for the last token
-    printf("\nCount is %d", count);
-    printf("\nBytes are %ld", sizeof(char*) * (count + 1));
     char** args = (char**) malloc(sizeof(char*) * (count + 1));
     for (int i = 0; i < count; i++) {
-        printf("\nMalloc'ing to args[%d]", i);
         args[i] = (char*) malloc(MAX_TOK_LEN * sizeof(char));
     }
 
@@ -109,8 +110,33 @@ char** split(char *str, char *delim, int *argc){
     }
     //sets the last arg to be null
     args[i] = NULL;
-
-
     return args;
 
+}
+void mode2exe(char *args[], int *numArgs){
+    char *fullpath = (char*) malloc(MAX_PATH_LEN * sizeof(char));
+    char *currentDir = getcwd(NULL, 0);
+    snprintf(fullpath, sizeof(char) * MAX_PATH_LEN, "%s/%s", currentDir, args[0]);
+    if (access(fullpath, F_OK | X_OK) == 0) {
+        mode1exe(args, numArgs);
+    }else{
+        int *numLocs = (int*)malloc(sizeof(int));
+        char **locs = split(getenv("PATH"), ":", numLocs);
+        for (int i = 0; i <= *numLocs; i++){
+            snprintf(fullpath, sizeof(char) * MAX_PATH_LEN, "%s/%s", locs[i], args[0]);
+            if (access(fullpath, F_OK | X_OK) == 0) {
+                args[0] = fullpath;
+                mode1exe(args, numArgs);
+            }else continue;
+        }
+        
+        for (int i = 0; i <= *numArgs; ++i) 
+			free(locs[i]);
+		free(locs);
+		free(numArgs);
+    }
+
+
+    free(fullpath);
+    free(currentDir);
 }

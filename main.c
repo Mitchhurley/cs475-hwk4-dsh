@@ -17,6 +17,7 @@ int main(int argc, char **argv)
 {
 	// stores user input from commmand line
 	//print the shell bit
+	
 	do {
 		char *cmdline = (char*) malloc(MAXBUF);
 		int *numArgs = (int*)malloc(sizeof(int));
@@ -39,9 +40,7 @@ int main(int argc, char **argv)
 			//case of an external command
 			if (currComm == CMD_EXT){
 				//if the first char of the path starts with '/', its a full path
-				if (strcmp(args[(*numArgs)], "&") == 0){
-					//move to where its actually executed;
-				}
+				
 				if (args[0][0] == '/'){
 					mode1exe(args, numArgs);
 					printf("\nCan anyone hear me?");
@@ -52,7 +51,7 @@ int main(int argc, char **argv)
 					free(cmdline);
 					
 				}else {
-					
+					mode2exe(args, numArgs);
 					printf("\nCan anyone hear me?");
 					for (int i = 0; i <= *numArgs; ++i) 
 						free(args[i]);
