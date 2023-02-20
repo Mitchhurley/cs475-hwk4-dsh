@@ -114,29 +114,44 @@ char** split(char *str, char *delim, int *argc){
 
 }
 void mode2exe(char *args[], int *numArgs){
+    int found = 0;
     char *fullpath = (char*) malloc(MAX_PATH_LEN * sizeof(char));
     char *currentDir = getcwd(NULL, 0);
     snprintf(fullpath, sizeof(char) * MAX_PATH_LEN, "%s/%s", currentDir, args[0]);
     if (access(fullpath, F_OK | X_OK) == 0) {
+        found = 1;
         mode1exe(args, numArgs);
+            for (int i = 0; i <= *numArgs; ++i) 
+		        free(args[i]);
+		free(args);
+		free(numArgs);
     }else{
+        
         int *numLocs = (int*)malloc(sizeof(int));
         char **locs = split(getenv("PATH"), ":", numLocs);
         for (int i = 0; i <= *numLocs; i++){
             snprintf(fullpath, sizeof(char) * MAX_PATH_LEN, "%s/%s", locs[i], args[0]);
             if (access(fullpath, F_OK | X_OK) == 0) {
+                found = 1;
                 args[0] = fullpath;
                 mode1exe(args, numArgs);
+                for (int i = 0; i <= *numArgs; ++i) 
+					free(args[i]);
+				free(args);
+				free(numArgs);
             }else continue;
         }
         
-        for (int i = 0; i <= *numArgs; ++i) 
+        for (int i = 0; i <= *numLocs; ++i) 
 			free(locs[i]);
 		free(locs);
-		free(numArgs);
+        free(numLocs);
     }
-
-
     free(fullpath);
     free(currentDir);
+    if (!found){
+        perror("\nError");
+    }
+    
+
 }

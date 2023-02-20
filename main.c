@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 	do {
 		char *cmdline = (char*) malloc(MAXBUF);
 		int *numArgs = (int*)malloc(sizeof(int));
-		printf("\n%s", DSH_PROMPT);
+		printf("%s", DSH_PROMPT);
 		fgets(cmdline, MAXBUF, stdin);
 		if (cmdline[0] != '\n'){
 			cmdline[strlen(cmdline) - 1] = '\0';
@@ -33,8 +33,6 @@ int main(int argc, char **argv)
 			
 			//declare array of arguments
 			char **args = split(cmdline, " ", numArgs);
-			
-			printf("\nGot input: %s", args[0]);
 			//get the current command	
 			cmd_t currComm = chkBuiltin(args[0]);
 			//case of an external command
@@ -43,7 +41,6 @@ int main(int argc, char **argv)
 				
 				if (args[0][0] == '/'){
 					mode1exe(args, numArgs);
-					printf("\nCan anyone hear me?");
 					for (int i = 0; i <= *numArgs; ++i) 
 						free(args[i]);
 					free(args);
@@ -52,7 +49,6 @@ int main(int argc, char **argv)
 					
 				}else {
 					mode2exe(args, numArgs);
-					printf("\nCan anyone hear me?");
 					for (int i = 0; i <= *numArgs; ++i) 
 						free(args[i]);
 					free(args);
